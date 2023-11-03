@@ -11,8 +11,11 @@ with open('q1_inputs.txt') as f:
             current_calories += int(calories_total[i])
         else:
             if current_calories > highest_calories:
+                third_highest_calories = second_highest_calories
+                second_highest_calories = highest_calories
                 highest_calories = current_calories
             elif current_calories > second_highest_calories:
+                third_highest_calories = second_highest_calories
                 second_highest_calories = current_calories
             else:
                 third_highest_calories = max(third_highest_calories, current_calories)
