@@ -96,6 +96,8 @@ with open('day7_input.txt') as f:
     directives = f.read().splitlines()
     NUM_DIRECTIVES = len(directives)
     MAX_SIZE = 100000
+    TOTAL_DISK_SPACE = 70000000
+    REQUIRED_UPDATE_SPACE = 30000000
 
     directory_stack = []
     current_index = 0
@@ -121,11 +123,16 @@ with open('day7_input.txt') as f:
         current_index += 1
 
     for directory in sizes:
-        print(directory)
         if sizes[directory] <= MAX_SIZE:
             sum_directories += sizes[directory]
-    print(sizes)
     print(sum_directories)
+
+    remaining_space = REQUIRED_UPDATE_SPACE - (TOTAL_DISK_SPACE - sizes['*/'])
+    smallest_sufficient_delete = TOTAL_DISK_SPACE
+    for path in sizes:
+        if sizes[path] >= remaining_space and sizes[path] < smallest_sufficient_delete:
+            smallest_sufficient_delete = sizes[path]
+    print(smallest_sufficient_delete)
         
     # file_system = None
     # current_directive_index = 0
