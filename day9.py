@@ -50,13 +50,18 @@ def move_head(pos_head, direction):
     if direction == 'U':
         return [head_y - 1, head_x]
 
+def count_visited_positions(visited_positions):
+    num_visited_positions = 0
+    for y in visited_positions:
+        num_visited_positions += len(visited_positions[y])
+    return num_visited_positions
+
 def simulate_movements():
     head_pos = [0, 0]
     tail_pos = [0, 0]
     visited_positions = {0:{0}}
-    num_visited_positions = 0
-    # steps = test
-    steps = parse_input()
+    steps = test
+    # steps = parse_input()
 
     for direction, distance in steps:
         num_steps_left = distance
@@ -69,10 +74,40 @@ def simulate_movements():
                 else:
                     visited_positions[tail_pos[0]] = {tail_pos[1]}
             num_steps_left -= 1
-    for y in visited_positions:
-        num_visited_positions += len(visited_positions[y])
-    return num_visited_positions
+    return count_visited_positions(visited_positions)
 
-print(simulate_movements())
+# day 2
+test_long = [
+    ['R', 5],
+    ['U', 8],
+    ['L', 8],
+    ['D', 3],
+    ['R', 17],
+    ['D', 10],
+    ['L', 25],
+    ['U', 20]
+]
+def simulate_movements_long():
+    NUM_OF_KNOTS = 10
+    knot_positions = [[0, 0] for i in range(NUM_OF_KNOTS)] # knot_positions[0] is the head, knot_positions[9] is the tail
+    visited_positions = {0: {0}}
+    # steps = test_long
+    steps = parse_input()
+    
+    for direction, distance in steps:
+        num_steps_left = distance
+        while num_steps_left > 0:
+            knot_positions[0] = move_head(knot_positions[0], direction)
+            for knot_number in range(1, NUM_OF_KNOTS):
+                if not is_adjacent(knot_positions[knot_number - 1], knot_positions[knot_number]):
+                    knot_positions[knot_number] = move_knot(knot_positions[knot_number - 1], knot_positions[knot_number])
+            if knot_positions[9][0] in visited_positions:
+                visited_positions[knot_positions[9][0]].add(knot_positions[9][1])
+            else:
+                visited_positions[knot_positions[9][0]] = {knot_positions[9][1]}
+            num_steps_left -= 1
+    return count_visited_positions(visited_positions)
+
+print(simulate_movements_long())
 
 
