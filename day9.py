@@ -1,12 +1,3 @@
-test = [['R', 4],
-['U', 4],
-['L', 3],
-['D', 1],
-['R', 4],
-['D', 1],
-['L', 5],
-['R', 2]
-]
 def parse_input():
     with open('day9_input.txt') as f:
         steps = [step.split(' ') for step in f.read().splitlines()]
@@ -60,8 +51,7 @@ def simulate_movements():
     head_pos = [0, 0]
     tail_pos = [0, 0]
     visited_positions = {0:{0}}
-    steps = test
-    # steps = parse_input()
+    steps = parse_input()
 
     for direction, distance in steps:
         num_steps_left = distance
@@ -77,21 +67,10 @@ def simulate_movements():
     return count_visited_positions(visited_positions)
 
 # day 2
-test_long = [
-    ['R', 5],
-    ['U', 8],
-    ['L', 8],
-    ['D', 3],
-    ['R', 17],
-    ['D', 10],
-    ['L', 25],
-    ['U', 20]
-]
 def simulate_movements_long():
     NUM_OF_KNOTS = 10
     knot_positions = [[0, 0] for i in range(NUM_OF_KNOTS)] # knot_positions[0] is the head, knot_positions[9] is the tail
     visited_positions = {0: {0}}
-    # steps = test_long
     steps = parse_input()
     
     for direction, distance in steps:
