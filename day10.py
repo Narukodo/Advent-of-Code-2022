@@ -1,8 +1,4 @@
-def parse_input():
-    with open('day10_input.txt') as f:
-        operations = [op.split(' ') for op in f.read().splitlines()]
-        operations = [[op[0], int(op[1])] if len(op) == 2 else op for op in operations]
-        return operations
+import math
 
 test = [
 ['addx', 15],
@@ -153,6 +149,23 @@ test = [
 ['noop',],
 ]
 
+def parse_input():
+    with open('day10_input.txt') as f:
+        operations = [op.split(' ') for op in f.read().splitlines()]
+        operations = [[op[0], int(op[1])] if len(op) == 2 else op for op in operations]
+        return operations
+
+def move_sprite(new_pos):
+    sprite_pos = {new_pos -1, new_pos, new_pos + 1}
+    return ['#' if i in sprite_pos else '.' for i in range(40)]
+
+def get_current_pixel(current_cycle, current_state):
+    return current_state[current_cycle]
+
+def increase_cycle(cycle):
+    cycle += 1
+    return cycle, cycle % 40, math.floor(cycle/40)
+
 def simulate_ops():
     x = 1
     cycle_number = 0
@@ -175,4 +188,24 @@ def simulate_ops():
             x += value
     print(total_signal_strength)
 
-simulate_ops()
+def simulate_sprite():
+    operations = parse_input()
+    crt_screen = [['.' for i in range(40)] for j in range(6)]
+    current_sprite = ['#' if i < 3 else '.' for i in range(40)]
+    cycle_number = 0
+    x = 1
+    for operation in operations:
+        current_col = cycle_number % 40
+        current_row = math.floor(cycle_number/40)
+        if operation[0] == 'addx':
+            crt_screen[current_row][current_col] = get_current_pixel(current_col, current_sprite)
+            cycle_number, current_col, current_row = increase_cycle(cycle_number)
+            crt_screen[current_row][current_col] = get_current_pixel(current_col, current_sprite)
+            x += operation[1]
+            current_sprite = move_sprite(x)
+            cycle_number, current_col, current_row = increase_cycle(cycle_number)
+        else:
+            crt_screen[current_row][current_col] = get_current_pixel(current_col, current_sprite)
+            cycle_number, current_col, current_row = increase_cycle(cycle_number)
+    print('\n'.join([''.join(row) for row in crt_screen]))
+simulate_sprite()
